@@ -9,9 +9,9 @@ const connectRabbitMQ = async () => {
     try {
         const conn = await amqp.connect(BROKER_URL);
         ch = await conn?.createChannel();
-        console.log("Successfully connected to RabbitMQ...")
+        console.log("✅ Successfully connected to RabbitMQ...")
     } catch (error) {
-        console.log("Oops something went wrong during connection!")
+        console.log("🛑 Oops something went wrong during connection!")
         console.log(error);
     }
 

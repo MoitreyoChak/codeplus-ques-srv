@@ -5,6 +5,7 @@ import { Submission } from "../models/SubmissionModel.js";
 import catchAsync from "../utils/catchAsync.js";
 
 const channel = await connectRabbitMQ();
+
 let resObj = {
     status: 'success'
 }
@@ -30,7 +31,7 @@ const getSubmission = catchAsync(async (req, res) => {
 const getAllSubmissionsByUser = catchAsync(async (req, res) => { })
 
 const postSubmission = catchAsync(async (req, res) => {
-    const { language, sourceCode, testcases } = req.body;
+    const { language, sourceCode, testcases, questionTitle, problemSetterName } = req.body;
     const { id, qid } = req.params;
 
     const jobId = uuidv4(); // Generate a unique job ID
@@ -45,7 +46,7 @@ const postSubmission = catchAsync(async (req, res) => {
         executionStatus: "pending"
     });
 
-    const msg = JSON.stringify({ jobId, sourceCode, testcases })
+    const msg = JSON.stringify({ id, qid, jobId, sourceCode, testcases, submissionId: result._id.toString(), questionTitle, problemSetterName })
     // Push the job to RabbitMQ
     channel.sendToQueue(`${language}-code-queue`, Buffer.from(msg), { persistent: true });
 

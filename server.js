@@ -15,7 +15,7 @@ const connectDB = async () => {
         isConnected = connection.readyState === 1;
 
         if (isConnected) {
-            console.log("Successfully connected to MongoDB");
+            console.log("✅ Successfully connected to MongoDB");
             return Promise.resolve(true);
         }
     } catch (error) {
@@ -26,5 +26,5 @@ const connectDB = async () => {
 
 await connectDB();
 app.listen(PORT, () => {
-    console.log(`listening on port ${PORT}`);
+    console.log(`✅ listening on port ${PORT}`);
 });

@@ -47,7 +47,3 @@ submission.index({ jobId: 1 });
 const Submission = mongoose.model("submissions", submission);
 export { Submission };
 
-
-
-
-
