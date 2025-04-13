@@ -1,6 +1,8 @@
 import { Question } from "../models/QuestionModel.js";
 import catchAsync from "../utils/catchAsync.js";
 import mongoose from "mongoose";
+import { getJetStreamClients } from '../jetStreamSetup.js';
+
 
 let resObj = {
     status: 'success'
@@ -129,7 +131,20 @@ const setQuestion = catchAsync(async (req, res) => {
         note: req.body.note ? req.body.note : "",
         testcases: req.body.testcases
     }
-    await Question.create(question);
+    const result = await Question.create(question);
+
+    const { js, sc } = getJetStreamClients();
+
+    try {
+        await js.publish("question.created", sc.encode(JSON.stringify({
+            id: req.body.problemSetterId,
+            questionId: result._id.toString(),
+            questionTitle: req.body.title
+        })));
+        console.log("✅ question published successfully!")
+    } catch (error) {
+        console.log("❌ Failed to publish question to JetStream:", error)
+    }
 
     resObj = { status: 'success' }
     statusCode = 200;
