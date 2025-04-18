@@ -16,7 +16,7 @@ const connectRabbitMQ = async () => {
     }
 
     let queue = "";
-    const supportedLanguages = ["c", "c++"];
+    const supportedLanguages = ["c", "cpp", "java"];
 
     supportedLanguages.forEach(async (language) => {
         queue = `${language}-code-queue`;

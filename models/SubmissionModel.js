@@ -27,7 +27,7 @@ const submission = new Schema({
     },
     language: {
         type: String,
-        enum: ['c++', 'java', 'c'],
+        enum: ['cpp', 'java', 'c'],
         default: 'c'
     },
     executionStatus: {
