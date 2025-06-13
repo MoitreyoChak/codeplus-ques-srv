@@ -11,7 +11,7 @@ const connectRabbitMQ = async () => {
         ch = await conn?.createChannel();
         console.log("✅ Successfully connected to RabbitMQ...")
     } catch (error) {
-        console.log("🛑 Oops something went wrong during connection!")
+        console.log("🛑 Oops something went wrong during RabbitMQ connection!")
         console.log(error);
     }
 

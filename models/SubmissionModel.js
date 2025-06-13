@@ -1,11 +1,19 @@
 import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
+const parameterSchema = new mongoose.Schema({
+    key: { type: String, required: true },
+    value: { type: String, required: true }, // Store as string regardless of type
+    type: { type: String, required: true, enum: ['array', 'string', 'number'] }
+});
+
 const resultSchema = new mongoose.Schema({
-    input: { type: String, required: true },
+    parameters: [parameterSchema],
     expectedOutput: { type: String, required: true },
     actualOutput: { type: String, required: true },
-    isCorrect: { type: Boolean, required: true }
+    isCorrect: { type: Boolean, required: true },
+    status: { type: String, required: true, enum: ['passed', 'failed'] },
+    compileErrorMessage: { type: String } // Optional, for compilation errors
 });
 
 const submission = new Schema({

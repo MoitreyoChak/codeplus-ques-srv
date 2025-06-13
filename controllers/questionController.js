@@ -133,20 +133,20 @@ const setQuestion = catchAsync(async (req, res) => {
     }
     const result = await Question.create(question);
 
-    const { js, sc } = getJetStreamClients();
+    // const { js, sc } = getJetStreamClients();
 
-    try {
-        await js.publish("question.created", sc.encode(JSON.stringify({
-            id: req.body.problemSetterId,
-            questionId: result._id.toString(),
-            questionTitle: req.body.title
-        })));
-        console.log("✅ question published successfully!")
-    } catch (error) {
-        console.log("❌ Failed to publish question to JetStream:", error)
-    }
+    // try {
+    //     await js.publish("question.created", sc.encode(JSON.stringify({
+    //         id: req.body.problemSetterId,
+    //         questionId: result._id.toString(),
+    //         questionTitle: req.body.title
+    //     })));
+    //     console.log("✅ question published successfully!")
+    // } catch (error) {
+    //     console.log("❌ Failed to publish question to JetStream:", error)
+    // }
 
-    resObj = { status: 'success' }
+    resObj = { status: 'success', qid: result._id.toString() }
     statusCode = 200;
     res.status(statusCode).json(resObj);
 })
