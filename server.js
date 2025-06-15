@@ -3,8 +3,8 @@ import app from "./app.js";
 import { initJetStream } from './jetStreamSetup.js';
 
 const PORT = 5001;
-// const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/userdb";
-const MONGODB_URI = "mongodb://localhost:27017/userdb";
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/userdb";
+// const MONGODB_URI = "mongodb://localhost:27017/userdb";
 
 let isConnected = false;
 

@@ -33,18 +33,29 @@ const getAllSubmissionsByUser = catchAsync(async (req, res) => { })
 const postSubmission = catchAsync(async (req, res) => {
     const { language, sourceCode, testcases, questionTitle, problemSetterName } = req.body;
     const { id, qid } = req.params;
+    console.log(`Received submission from user ${id} for question ${qid} with language ${language}`);
+    console.log("req.body", req.body);
+
+    console.log("testCases testing 1: ", testcases);
 
     const jobId = uuidv4(); // Generate a unique job ID
+    let result;
 
-    const result = await Submission.create({
-        userId: id,
-        questionId: qid,
-        jobId,
-        code: sourceCode,
-        submissionResult: "",
-        language,
-        executionStatus: "pending"
-    });
+    try {
+        result = await Submission.create({
+            userId: id,
+            questionId: qid,
+            questionTitle,
+            jobId,
+            code: sourceCode,
+            submissionResult: "",
+            language,
+            executionStatus: "pending"
+        });
+    } catch (error) {
+        console.log(`Error creating submission: ${error}`);
+    }
+    // console.log(`Created submission: ${result}`);
 
     const msg = JSON.stringify({ id, qid, jobId, sourceCode, testcases, submissionId: result._id.toString(), questionTitle, problemSetterName })
     // Push the job to RabbitMQ

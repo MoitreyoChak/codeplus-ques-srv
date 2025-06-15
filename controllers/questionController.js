@@ -119,6 +119,60 @@ const getQuestionsByDifficulty = catchAsync(async (req, res) => {
     });
 });
 
+const buildPipeline = (filter) => {
+    const pipeline = [];
+    const matchStage = {};
+
+    if (filter.difficulty) {
+        matchStage.difficulty = filter.difficulty;
+        //  pipeline.push({ $match: { difficulty: filter.difficulty } });
+    }
+
+    if (filter.tags && Array.isArray(filter.tags) && filter.tags.length > 0) {
+        // Ensure tags is an array and has at least one tag
+        matchStage.tags = { $in: filter.tags };
+        // pipeline.push({ $match: { tags: { $in: filter.tags } } });
+    }
+    if (filter.title && filter.title.trim() !== '') {
+        // Ensure title is a string and not empty
+        matchStage.title = { $regex: filter.title, $options: 'i' }; // Case-insensitive search
+        // pipeline.push({ $match: { title: { $regex: filter.title, $options: 'i' } } });
+    }
+    // return Object.keys(matchStage).length ? [{ $match: matchStage }] : [];
+    if (Object.keys(matchStage).length > 0) {
+        pipeline.push({ $match: matchStage });
+    }
+
+    pipeline.push({
+        $project: {
+            _id: 1,
+            title: 1,
+            difficulty: 1,
+        }
+    });
+
+    return pipeline;
+};
+
+
+const getFilteredQuestions = catchAsync(async (req, res) => {
+    let filters = req.body;
+
+    // Ensure difficulty is valid
+    if (filters.difficulty && !["Easy", "Medium", "Hard"].includes(filters.difficulty)) {
+        return res.status(400).json({ status: "error", message: "Invalid difficulty level!" });
+    }
+
+    const result = await Question.aggregate(buildPipeline(filters));
+
+    res.status(200).json({
+        status: "success",
+        result
+        // totalPages: Math.ceil(totalQuestions / limit),
+        // totalQuestions,
+    });
+});
+
 const setQuestion = catchAsync(async (req, res) => {
     const question = {
         userId: req.body.problemSetterId,
@@ -153,5 +207,5 @@ const setQuestion = catchAsync(async (req, res) => {
 
 export {
     getQuestion, getAllQuestions,
-    getQuestionsByTag, getQuestionsByDifficulty, setQuestion
+    getQuestionsByTag, getQuestionsByDifficulty, getFilteredQuestions, setQuestion
 }

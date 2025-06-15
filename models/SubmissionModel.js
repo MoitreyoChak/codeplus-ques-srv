@@ -44,6 +44,10 @@ const submission = new Schema({
         default: 'pending'
     },
     results: [resultSchema],
+    verdict: {
+        type: String,
+        enum: ['AC', 'WA', 'compilation-error', 'runtime-error', 'TLE'],
+    },
 },
     {
         timestamps: true,

@@ -1,7 +1,8 @@
 import express from 'express';
 const router = express.Router();
 import {
-    getQuestion, getAllQuestions, getQuestionsByTag, getQuestionsByDifficulty, setQuestion
+    getQuestion, getAllQuestions, getQuestionsByTag,
+    getQuestionsByDifficulty, getFilteredQuestions, setQuestion
 } from '../controllers/questionController.js';
 
 router.route("/").get((req, res) => {
@@ -13,6 +14,7 @@ router.route("/all").get(getAllQuestions);
 router.route("/tags").get(getQuestionsByTag);
 //use req.body to send tags
 router.route("/difficulty").get(getQuestionsByDifficulty);
+router.route("/filter").get(getFilteredQuestions);
 
 
 

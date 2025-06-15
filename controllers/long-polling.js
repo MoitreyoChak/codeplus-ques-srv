@@ -16,7 +16,7 @@ const longPoll = catchAsync(async (req, res) => {
             if (result?.executionStatus === "executed") {
                 resObj.status = result.executionStatus;
                 resObj.results = result.results;
-
+                resObj.verdict = result.verdict;
                 return true;
             }
 
