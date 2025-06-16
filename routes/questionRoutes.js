@@ -14,7 +14,7 @@ router.route("/all").get(getAllQuestions);
 router.route("/tags").get(getQuestionsByTag);
 //use req.body to send tags
 router.route("/difficulty").get(getQuestionsByDifficulty);
-router.route("/filter").get(getFilteredQuestions);
+router.route("/filter").post(getFilteredQuestions);
 
 
 

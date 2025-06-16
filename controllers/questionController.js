@@ -123,13 +123,13 @@ const buildPipeline = (filter) => {
     const pipeline = [];
     const matchStage = {};
 
-    if (filter.difficulty) {
-        matchStage.difficulty = filter.difficulty;
-        //  pipeline.push({ $match: { difficulty: filter.difficulty } });
+    //filter.difficulty=["Easy", "Medium", "Hard"]
+    if (filter.difficulty && Array.isArray(filter.difficulty) && filter.difficulty.length > 0) {
+        matchStage.difficulty = { $in: filter.difficulty };
     }
-
     if (filter.tags && Array.isArray(filter.tags) && filter.tags.length > 0) {
         // Ensure tags is an array and has at least one tag
+        console.log("Tags filter:", filter.tags);
         matchStage.tags = { $in: filter.tags };
         // pipeline.push({ $match: { tags: { $in: filter.tags } } });
     }
@@ -157,11 +157,7 @@ const buildPipeline = (filter) => {
 
 const getFilteredQuestions = catchAsync(async (req, res) => {
     let filters = req.body;
-
-    // Ensure difficulty is valid
-    if (filters.difficulty && !["Easy", "Medium", "Hard"].includes(filters.difficulty)) {
-        return res.status(400).json({ status: "error", message: "Invalid difficulty level!" });
-    }
+    // console.log("Filters received:", filters);
 
     const result = await Question.aggregate(buildPipeline(filters));
 
